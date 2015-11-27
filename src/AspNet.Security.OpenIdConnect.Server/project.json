@@ -1,0 +1,31 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "OpenID Connect server for ASP.NET 5.",
+  "authors": [ "Kévin Chalet" ],
+  "owners": [ "Kévin Chalet" ],
+
+  "projectUrl": "https://github.com/aspnet-contrib/AspNet.Security.OpenIdConnect.Server",
+  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0.html",
+
+  "dependencies": {
+    "AspNet.Security.OpenIdConnect.Extensions": "1.0.0-*",
+
+    "Microsoft.AspNet.Authentication": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
+
+    "Microsoft.Extensions.Caching.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.WebEncoders": "1.0.0-rc1-final",
+
+    "Microsoft.Extensions.NotNullAttribute.Sources": {
+      "type": "build",
+      "version": "1.0.0-*"
+    },
+
+    "Newtonsoft.Json": "7.0.1"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  }
+}

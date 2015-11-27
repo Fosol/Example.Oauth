@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "_Layout";
+}
+@model LoginViewModel
+
+<form asp-controller="Authentication" asp-action="Login" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" role="form" id="login-form">
+    <div align="center" valign="middle">
+        <div asp-validation-summary="ValidationSummary.All"></div>
+        <div>
+            <label asp-for="UserName"></label>
+            <br />
+            <input asp-for="UserName" class="usernamebox" />
+            <span asp-validation-for="UserName"></span>
+        </div>
+        <div>
+            <label asp-for="Password"></label>
+            <br />
+            <input asp-for="Password" class="passwordbox" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <input type="submit" class="login-button" value="Log in" />
+        <div>
+            <input asp-for="RememberMe" />
+            <label asp-for="RememberMe"></label>
+        </div>
+    </div>
+</form>
