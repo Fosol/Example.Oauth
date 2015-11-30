@@ -60,13 +60,14 @@ namespace Example.Oauth.Server.Controllers
             // restored by the OpenID Connect server middleware after the external authentication process has been completed.
             if (!User.Identities.Any(identity => identity.IsAuthenticated))
             {
-                return new ChallengeResult(new AuthenticationProperties
+                var ap = new AuthenticationProperties();
+
+                ap.RedirectUri = Url.Action(nameof(Authorize), new
                 {
-                    RedirectUri = Url.Action(nameof(Authorize), new
-                    {
-                        unique_id = request.GetUniqueIdentifier()
-                    })
+                    unique_id = request.GetUniqueIdentifier()
                 });
+
+                return new ChallengeResult(ap);
             }
 
             // Note: AspNet.Security.OpenIdConnect.Server automatically ensures an application
@@ -160,7 +161,7 @@ namespace Example.Oauth.Server.Controllers
             // You can also limit the resources endpoints
             // the access token should be issued for:
             properties.SetResources(new[] {
-                "http://localhost:54540/"
+                "http://localhost:54683/"
             });
 
             // This call will instruct AspNet.Security.OpenIdConnect.Server to serialize

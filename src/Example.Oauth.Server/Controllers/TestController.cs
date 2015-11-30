@@ -23,5 +23,17 @@ namespace Example.Oauth.Server.Controllers
         {
             return View("Index");
         }
+
+        [HttpGet]
+        [Route("~/test/claims")]
+        public IActionResult Claims()
+        {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                var claims = this.User.Claims.Select(c => new { c.Type, c.Value });
+                return new ObjectResult(claims);
+            }
+            return new ObjectResult("not logged in.");
+        }
     }
 }

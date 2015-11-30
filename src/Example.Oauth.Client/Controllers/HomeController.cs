@@ -24,7 +24,7 @@ namespace Example.Oauth.Client.Controllers
         {
             using (var client = new HttpClient())
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:54540/api/message");
+                var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:54683/api/message");
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
 
                 var response = await client.SendAsync(request, cancellationToken);

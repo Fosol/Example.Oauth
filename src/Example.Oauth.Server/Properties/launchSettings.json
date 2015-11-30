@@ -2,8 +2,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "test/index",
+      "launchUrl": "test/claims",
       "environmentVariables": {
         "ASPNET_ENV": "Development"
       }

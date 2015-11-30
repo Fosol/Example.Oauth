@@ -4,5 +4,10 @@
         <name>Example.Oauth.Server</name>
     </assembly>
     <members>
+        <member name="P:Example.Oauth.Server.Startup.Configuration">
+            <summary>
+            get/set - Configuration settings for the application.
+            </summary>
+        </member>
     </members>
 </doc>

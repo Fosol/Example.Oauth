@@ -15,6 +15,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity;
 
 namespace Example.Oauth.Server
 {
@@ -55,7 +56,14 @@ namespace Example.Oauth.Server
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
             // Add Identity services to the services container.
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Cookies.ApplicationCookieAuthenticationScheme = "ServerCookie";
+                //options.Cookies.ApplicationCookie = new CookieAuthenticationOptions()
+                //{
+                //    LoginPath = "/signing"
+                //};
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -99,6 +107,8 @@ namespace Example.Oauth.Server
                     options.Audience = "http://localhost:54683/";
                     options.Authority = "http://localhost:54683/";
                 });
+
+                branch.UseIdentity();
             });
 
             // Create a new branch where the registered middleware will be executed only for non API calls.
@@ -113,8 +123,10 @@ namespace Example.Oauth.Server
                     options.AuthenticationScheme = "ServerCookie";
                     options.CookieName = CookieAuthenticationDefaults.CookiePrefix + "ServerCookie";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-                    options.LoginPath = new PathString("/signin");
+                    options.LoginPath = new PathString("/account/login");
                 });
+
+                branch.UseIdentity();
             });
 
             app.UseOpenIdConnectServer(options =>
@@ -130,9 +142,6 @@ namespace Example.Oauth.Server
                 // RSA keys but you can also use your own certificate:
                 // options.SigningCredentials.AddCertificate(certificate);
             });
-
-            // Add cookie-based authentication to the request pipeline.
-            app.UseIdentity();
 
             app.UseStaticFiles();
 
