@@ -58,11 +58,7 @@ namespace Example.Oauth.Server
             // Add Identity services to the services container.
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                options.Cookies.ApplicationCookieAuthenticationScheme = "ServerCookie";
-                //options.Cookies.ApplicationCookie = new CookieAuthenticationOptions()
-                //{
-                //    LoginPath = "/signing"
-                //};
+                //options.Cookies.ApplicationCookieAuthenticationScheme = "ServerCookie";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -107,8 +103,6 @@ namespace Example.Oauth.Server
                     options.Audience = "http://localhost:54683/";
                     options.Authority = "http://localhost:54683/";
                 });
-
-                branch.UseIdentity();
             });
 
             // Create a new branch where the registered middleware will be executed only for non API calls.

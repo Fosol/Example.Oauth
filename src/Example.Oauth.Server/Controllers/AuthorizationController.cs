@@ -86,8 +86,9 @@ namespace Example.Oauth.Server.Controllers
                 });
             }
 
+            return await Accept(new CancellationToken());
             // Note: in a real world application, you'd probably prefer creating a specific view model.
-            return View("Authorize", Tuple.Create(request, application));
+            //return View("Authorize", Tuple.Create(request, application));
         }
 
         [Authorize, HttpPost("~/connect/authorize/accept"), ValidateAntiForgeryToken]

@@ -7,6 +7,7 @@ using Microsoft.AspNet.Http.Features;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
+using Microsoft.Extensions.OptionsModel;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
@@ -19,29 +20,24 @@ namespace Example.Oauth.Server.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApplicationContext database;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private static bool _databaseChecked;
 
         public AccountController(
-            ApplicationContext database,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ApplicationDbContext applicationDbContext)
         {
-            this.database = database;
             _userManager = userManager;
             _signInManager = signInManager;
             _applicationDbContext = applicationDbContext;
         }
 
         [HttpGet, Route("~/account/login")]
-        public ActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null)
         {
-            var request = HttpContext.GetOpenIdConnectRequest();
-
             // Note: the "returnUrl" parameter corresponds to the endpoint the user agent
             // will be redirected to after a successful authentication and not
             // the redirect_uri of the requesting client application.
@@ -54,6 +50,14 @@ namespace Example.Oauth.Server.Controllers
         [HttpPost, Route("~/account/login"), ValidateAntiForgeryToken]
         public async Task<IActionResult> LoginAsync([FromForm] Models.LoginViewModel model, string returnUrl = null)
         {
+            // Note: the "returnUrl" parameter corresponds to the endpoint the user agent
+            // will be redirected to after a successful authentication and not
+            // the redirect_uri of the requesting client application.
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                return HttpBadRequest();
+            }
+
             EnsureDatabaseCreated(_applicationDbContext);
             ViewBag.ReturnUrl = returnUrl;
             if (ModelState.IsValid)
@@ -62,15 +66,10 @@ namespace Example.Oauth.Server.Controllers
                 //var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-
-                    //return RedirectToAction("Authorize", "Authorization");
                     return new ChallengeResult("oidc-server", new AuthenticationProperties
                     {
-                        RedirectUri = returnUrl ?? "http://localhost:59872/"
+                        RedirectUri = returnUrl
                     });
-                    // Need to redirect back to calling client application.
-                    // Must return oauth access token.
-                    //return View("Login", model);
                 }
                 //if (result.RequiresTwoFactor)
                 //{
@@ -115,14 +114,6 @@ namespace Example.Oauth.Server.Controllers
             {
                 return RedirectToAction(nameof(TestController.Index), "Claims");
             }
-        }
-
-        protected virtual Task<Application> GetApplicationAsync(string identifier, CancellationToken cancellationToken)
-        {
-            // Retrieve the application details corresponding to the requested client_id.
-            return (from application in database.Applications
-                    where application.ApplicationID == identifier
-                    select application).SingleOrDefaultAsync(cancellationToken);
         }
     }
 }
